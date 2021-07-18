@@ -1,0 +1,1 @@
+export const backendAPI = 'https://api.guruaqua.com'
