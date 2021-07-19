@@ -1,104 +1,41 @@
-import { backendAPI } from "../env";
-const mockData = [
-  {
-    id: 1,
-    address_2: "string",
-    timezone: "string",
-    contact_person: "string",
-    gst_number: 0,
-    account_no: 0,
-    country: "string",
-    bank_name: "string",
-    account_name: "string",
-    branch: "string",
-    pan_number: 0,
-    vendor: "string",
-    phone_no_1: 0,
-    pin_code: 0,
-    fax_no: 0,
-    state: "string",
-    ts: "string",
-    name: "Jega",
-    phone_no_2: 0,
-    address_1: "string",
-    code: "001",
-    city: "string",
-    IFSC_code: "string",
-    email_id: "string",
-    description: "string",
-    alternate_email_id: "string"
-  },
-  {
-    id: 2,
-    address_2: "string",
-    timezone: "string",
-    contact_person: "11111111",
-    gst_number: 0,
-    account_no: 0,
-    country: "string",
-    bank_name: "string",
-    account_name: "string",
-    branch: "string",
-    pan_number: 0,
-    vendor: "string",
-    phone_no_1: 0,
-    pin_code: 0,
-    fax_no: 0,
-    state: "string",
-    ts: "string",
-    name: "Karthick",
-    phone_no_2: 0,
-    address_1: "Chennai",
-    code: "string",
-    city: "string",
-    IFSC_code: "string",
-    email_id: "string",
-    description: "string",
-    alternate_email_id: "string"
-  },
-  {
-    id: 3,
-    address_2: "string",
-    timezone: "string",
-    contact_person: "11111111",
-    gst_number: 0,
-    account_no: 0,
-    country: "string",
-    bank_name: "string",
-    account_name: "string",
-    branch: "string",
-    pan_number: 0,
-    vendor: "string",
-    phone_no_1: 0,
-    pin_code: 0,
-    fax_no: 0,
-    state: "string",
-    ts: "string",
-    name: "Karthick1",
-    phone_no_2: 0,
-    address_1: "Chennai",
-    code: "string",
-    city: "string",
-    IFSC_code: "string",
-    email_id: "string",
-    description: "string",
-    alternate_email_id: "string"
-  }
-];
-
+import { backendAPI } from '../env';
+const defaultValues = {
+  code: 'string',
+  name: 'Jega1',
+  description: 'string',
+  contact_person: 'string',
+  address_1: 'string',
+  address_2: 'string',
+  pin_code: 0,
+  city: 'string',
+  state: 'string',
+  country: 'string',
+  vendor: 'string',
+  timezone: 'string',
+  phone_no_1: 0,
+  phone_no_2: 0,
+  fax_no: 0,
+  pan_number: 0,
+  gst_number: 0,
+  email_id: 'string',
+  alternate_email_id: 'string',
+  ts: 'string',
+  bank_name: 'string',
+  branch: 'string',
+  account_name: 'string',
+  account_no: 0,
+  IFSC_code: 'string',
+};
 export const getVendors = async () => {
-  return { success: true, data: mockData };
+  // return { success: true, data: mockData };
   try {
-    const response = await fetch(`${backendAPI}/vendor`, {
-      method: "GET",
-      headers: {
-        // "Access-Control-Allow-Origin": backendAPI
-      }
+    const response = await fetch(`${backendAPI}/vendor/`, {
+      method: 'GET',
     });
 
     return {
       success: response.status >= 200 && response.status <= 300,
-      data: response.json()
+      data: await response.json(),
     };
   } catch (error) {
     return { success: false };
@@ -108,16 +45,34 @@ export const getVendors = async () => {
 export const createVendor = async (data) => {
   try {
     const response = await fetch(`${backendAPI}/vendor`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json"
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data)
+      body: JSON.stringify({
+        ...defaultValues,
+        ...data,
+      }),
     });
 
     return {
       success: response.status >= 200 && response.status <= 300,
-      data: response.json()
+      data: response.json(),
+    };
+  } catch (error) {
+    return { success: false };
+  }
+};
+
+export const deleteVendor = async (id) => {
+  // return { success: true, data: mockData };
+  try {
+    const response = await fetch(`${backendAPI}/vendor/${id}`, {
+      method: 'DELETE',
+    });
+
+    return {
+      success: response.status >= 200 && response.status <= 300,
     };
   } catch (error) {
     return { success: false };
