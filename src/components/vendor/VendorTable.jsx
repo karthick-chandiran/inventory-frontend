@@ -64,8 +64,8 @@ export default function VendorTable(props) {
           </StyledTableRow>
         </TableHead>
         <TableBody>
-          {data.map((row) => (
-            <StyledTableRow key={row.name}>
+          {data.map((row,index) => (
+            <StyledTableRow key={index}>
               <StyledTableCell
                 component="th"
                 scope="row"

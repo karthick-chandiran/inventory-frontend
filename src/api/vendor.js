@@ -64,6 +64,27 @@ export const createVendor = async (data) => {
   }
 };
 
+export const updateVendor = async (data, id) => {
+  try {
+    const response = await fetch(`${backendAPI}/vendor/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        ...data,
+      }),
+    });
+
+    return {
+      success: response.status >= 200 && response.status <= 300,
+      data: response.json(),
+    };
+  } catch (error) {
+    return { success: false };
+  }
+};
+
 export const deleteVendor = async (id) => {
   // return { success: true, data: mockData };
   try {
