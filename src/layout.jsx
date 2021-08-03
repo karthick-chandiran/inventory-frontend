@@ -17,7 +17,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import { Link } from 'react-router-dom';
 
 const drawerWidth = 240;
-const menuData = [{ link: '/vendor', linkText: 'Vendor' }];
+const menuData = [{ link: '/vendor', linkText: 'Vendor' },{ link: '/vendor', linkText: 'Vendor2' }];
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',

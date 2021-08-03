@@ -50,7 +50,6 @@ export const createVendor = async (data) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        ...defaultValues,
         ...data,
       }),
     });

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useLocation, Redirect, useHistory, Fragment } from 'react-router-dom';
+import { useLocation, Redirect, useHistory } from 'react-router-dom';
 import { vendorPath } from '../../utils/routepath';
 import {
   Typography,
@@ -9,90 +9,13 @@ import {
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
-import { InventoryTextField } from '../common-components/textField';
+import FormFields from './FormFields';
 import { deleteVendor, updateVendor } from '../../api/vendor';
 import { Alert } from '@material-ui/lab';
 import isEqual from 'lodash.isequal';
 const errorMsg = 'Something went wrong. Please try again';
 const successMsg = 'Vendor Details Added Successfully';
 
-const vendorFieldKeys = [
-  {
-    id: 'address_2',
-  },
-  {
-    id: 'vendor',
-  },
-  {
-    id: 'account_name',
-  },
-  {
-    id: 'gst_number',
-  },
-  {
-    id: 'city',
-  },
-  {
-    id: 'pin_code',
-  },
-  {
-    id: 'fax_no',
-  },
-  {
-    id: 'account_no',
-  },
-  {
-    id: 'branch',
-  },
-  {
-    id: 'description',
-  },
-  {
-    id: 'contact_person',
-  },
-  {
-    id: 'timezone',
-  },
-  {
-    id: 'phone_no_2',
-  },
-  {
-    id: 'bank_name',
-  },
-  {
-    id: 'country',
-  },
-  {
-    id: 'code',
-  },
-  {
-    id: 'IFSC_code',
-  },
-  {
-    id: 'pan_number',
-  },
-  {
-    id: 'phone_no_1',
-  },
-  {
-    id: 'email_id',
-  },
-  {
-    id: 'name',
-  },
-  {
-    id: 'ts',
-  },
-  {
-    id: 'state',
-  },
-  {
-    id: 'address_1',
-  },
-  {
-    id: 'alternate_email_id',
-  },
-];
 const useStyles = makeStyles({
   breadCrumbText: {
     color: 'inherit',
@@ -114,9 +37,7 @@ const useStyles = makeStyles({
   contentContainer: {
     width: '50%',
   },
-  fieldContainer: {
-    marginBottom: '20px',
-  },
+
   updateBtn: {
     marginBottom: '10px',
   },
@@ -128,31 +49,23 @@ export default function DisplayVendorDetails(props) {
   const location = useLocation();
   const history = useHistory();
   const { vendorData: data = {} } = location.state || {};
-  const [vendorError, updateErrorData] = useState({});
   const [prevVendorData, updatePrevVendorData] = useState(data);
+  const [isFormValid, updateIsFormValid] = useState(false);
   const [vendorData, updateVendorData] = useState(data);
   const [isChanged, updateIsDataChanged] = useState(false);
   const [errorStatus, updateErrorStatus] = useState({
     status: 'not_set',
   });
   const classes = useStyles();
-  const onInputChange = (e) => {
-    const { name, value } = e.target;
-    if (!value) {
-      updateErrorData({ ...vendorError, [name]: `${name} is required` });
-    } else {
-      const newVendorError = { ...vendorError };
-      delete newVendorError[name];
-      updateErrorData({ ...newVendorError });
-    }
-    const newVendorData = { ...vendorData, [name]: value };
+  const onInputChange = (newVendorData,isValid) => {
+    updateVendorData(newVendorData)
+    updateIsFormValid(isValid)
     updateIsDataChanged(!isEqual(prevVendorData, newVendorData));
-    updateVendorData(newVendorData);
   };
 
   const onClickDeleteVendor = async () => {
     updateErrorStatus({ status: 'inprogress' });
-    const status = await deleteVendor(vendorData.id);
+    const status = await deleteVendor(data.id);
     if (status.success) {
       history.push(vendorPath);
     } else {
@@ -207,7 +120,7 @@ export default function DisplayVendorDetails(props) {
               disabled={
                 !isChanged ||
                 errorStatus.status === 'inprogress' ||
-                Object.keys(vendorError).length > 0
+                !isFormValid
               }
               className={classes.updateBtn}
             >
@@ -233,21 +146,7 @@ export default function DisplayVendorDetails(props) {
           </Alert>
         )}
         <div>
-          {vendorFieldKeys.map(({ id }) => {
-            return (
-              <div className={classes.fieldContainer} key={'view' + id}>
-                <InventoryTextField
-                  required
-                  size="medium"
-                  onChange={onInputChange}
-                  name={id}
-                  label={id.replaceAll('_', ' ').toUpperCase()}
-                  value={vendorData[id]}
-                  error={Boolean(vendorError[id])}
-                />
-              </div>
-            );
-          })}
+          <FormFields onValueChange={onInputChange} data={data} />
         </div>
       </div>
     </div>
