@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useLocation, Redirect, useHistory } from 'react-router-dom';
-import { vendorPath } from '../../utils/routepath';
+import { itemsPath } from '../../utils/routepath';
 import {
   Typography,
   Breadcrumbs,
@@ -9,12 +9,12 @@ import {
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
-import FormFields, { vendorFieldKeys }  from './FormFields';
-import { deleteVendor, updateVendor } from '../../api/vendor';
+import FormFields, { itemsFieldKeys }  from './FormFields';
+import { deleteItems, updateItems } from '../../api/items';
 import { Alert } from '@material-ui/lab';
 import isEqual from 'lodash.isequal';
 const errorMsg = 'Something went wrong. Please try again';
-const successMsg = 'Vendor Details Added Successfully';
+const successMsg = 'Items Details Added Successfully';
 
 const useStyles = makeStyles({
   breadCrumbText: {
@@ -30,7 +30,7 @@ const useStyles = makeStyles({
     flexDirection: 'column',
     marginLeft: 'auto',
   },
-  vendorText: {
+  itemsText: {
     display: 'flex',
     alignItems: 'center',
   },
@@ -45,29 +45,29 @@ const useStyles = makeStyles({
     marginBottom: '20px',
   },
 });
-export default function DisplayVendorDetails(props) {
+export default function DisplayItemsDetails(props) {
   const location = useLocation();
   const history = useHistory();
-  const { vendorData: data = {} } = location.state || {};
-  const [prevVendorData, updatePrevVendorData] = useState(data);
+  const { itemsData: data = {} } = location.state || {};
+  const [prevItemsData, updatePrevItemsData] = useState(data);
   const [isFormValid, updateIsFormValid] = useState(false);
-  const [vendorData, updateVendorData] = useState(data);
+  const [itemsData, updateItemsData] = useState(data);
   const [isChanged, updateIsDataChanged] = useState(false);
   const [errorStatus, updateErrorStatus] = useState({
     status: 'not_set',
   });
   const classes = useStyles();
-  const onInputChange = (newVendorData,) => {
-    const isValid = isFormValidFun(newVendorData)
-    updateVendorData(newVendorData)
+  const onInputChange = (newItemsData,) => {
+    const isValid = isFormValidFun(newItemsData)
+    updateItemsData(newItemsData)
     updateIsFormValid(isValid)
-    updateIsDataChanged(!isEqual(prevVendorData, newVendorData));
+    updateIsDataChanged(!isEqual(prevItemsData, newItemsData));
   };
-  const isFormValidFun = (updatedVendorData)=>{
+  const isFormValidFun = (updatedItemsData)=>{
     let isFormValid = false
-    for (let index = 0; index < vendorFieldKeys.length; index++) {
-      const { id, type: inputType } = vendorFieldKeys[index];
-      const value = updatedVendorData[id];
+    for (let index = 0; index < itemsFieldKeys.length; index++) {
+      const { id, type: inputType } = itemsFieldKeys[index];
+      const value = updatedItemsData[id];
       if (!value) {
         isFormValid = false;
         break;
@@ -84,22 +84,22 @@ export default function DisplayVendorDetails(props) {
     }
     
   }
-  const onClickDeleteVendor = async () => {
+  const onClickDeleteItems = async () => {
     updateErrorStatus({ status: 'inprogress' });
-    const status = await deleteVendor(data.id);
+    const status = await deleteItems(data.id);
     if (status.success) {
-      history.push(vendorPath);
+      history.push(itemsPath);
     } else {
       updateErrorStatus({ status: 'error', message: errorMsg });
     }
   };
 
-  const submitVendorData = async () => {
+  const submitItemsData = async () => {
     updateErrorStatus({ status: 'inprogress' });
-    const { id, ...payload } = vendorData;
-    const updateStatus = await updateVendor({ ...payload }, id);
+    const { id, ...payload } = itemsData;
+    const updateStatus = await updateItems({ ...payload }, id);
     if (updateStatus.success) {
-      updatePrevVendorData(vendorData);
+      updatePrevItemsData(itemsData);
       updateIsDataChanged(false);
       updateErrorStatus({ status: 'success', message: successMsg });
       setTimeout(() => {
@@ -110,7 +110,7 @@ export default function DisplayVendorDetails(props) {
     }
   };
 
-  if (!data.id) return <Redirect to={vendorPath} />;
+  if (!data.id) return <Redirect to={itemsPath} />;
   return (
     <div>
       <Breadcrumbs aria-label="breadcrumb">
@@ -120,24 +120,24 @@ export default function DisplayVendorDetails(props) {
           </Link>
         </BreadCrumbLink>
         <BreadCrumbLink component="div" color="inherit">
-          <Link to={vendorPath} className={classes.breadCrumbText}>
-            Vendors
+          <Link to={itemsPath} className={classes.breadCrumbText}>
+            Items
           </Link>
         </BreadCrumbLink>
-        <Typography color="textPrimary">{prevVendorData.name}</Typography>
+        <Typography color="textPrimary">{prevItemsData.name}</Typography>
       </Breadcrumbs>
       <div className={classes.contentContainer}>
         <div className={classes.horizontalSplit}>
-          <div className={classes.vendorText}>
+          <div className={classes.itemsText}>
             <Typography color="textPrimary" variant="h4">
-              {prevVendorData.name}
+              {prevItemsData.name}
             </Typography>
           </div>
           <div className={classes.verticalSplit}>
             <Button
               color="primary"
               variant={'contained'}
-              onClick={submitVendorData}
+              onClick={submitItemsData}
               disabled={
                 !isChanged ||
                 errorStatus.status === 'inprogress' ||
@@ -150,7 +150,7 @@ export default function DisplayVendorDetails(props) {
             <Button
               color="secondary"
               variant={'contained'}
-              onClick={onClickDeleteVendor}
+              onClick={onClickDeleteItems}
               disabled={errorStatus.status === 'inprogress'}
             >
               Delete
