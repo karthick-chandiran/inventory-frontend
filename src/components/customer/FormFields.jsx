@@ -93,10 +93,6 @@ export default function FormFields(props) {
   const { onValueChange, data: defaultData = {}, errors = {} } = props;
   const [customerError, updateErrorData] = useState({});
   const [customerData, updateCustomerData] = useState(defaultData);
-  // useEffect(()=>{
-  //   console.log('errors')
-  //   updateErrorData(errors)
-  // },[errors])
 
   const onInputChange = (e, inputType) => {
     const { name, value } = e.target;
