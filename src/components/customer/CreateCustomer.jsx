@@ -66,29 +66,6 @@ export default function CreateCustomer() {
   const submitCustomerData = async (e) => {
     e.preventDefault();
     updateErrorStatus({ status: 'inprogress' });
-    // let newFormFieldErrors = {};
-    // customerFieldKeys.forEach(({ id, type: inputType }) => {
-    //   const value = customerData[id];
-    //   if (!value) {
-    //     newFormFieldErrors = {
-    //       ...newFormFieldErrors,
-    //       [id]: `${id} is required`,
-    //     };
-    //   } else if (inputType === 'number' && isNaN(value)) {
-    //     newFormFieldErrors = {
-    //       ...newFormFieldErrors,
-    //       [id]: `${id} needs to be a number`,
-    //     };
-    //   } else if (inputType === 'email' && !validateEmail(value)) {
-    //     newFormFieldErrors = {
-    //       ...newFormFieldErrors,
-    //       [id]: `Enter a valid email`,
-    //     };
-    //   }
-    // });
-    // if (Object.keys(newFormFieldErrors).length > 0) {
-    //   updateFormFieldErrors(newFormFieldErrors);
-    // } else {
       const createStatus = await createCustomer(customerData);
       if (createStatus.success) {
         updateErrorStatus({ status: 'success', message: successMsg });
