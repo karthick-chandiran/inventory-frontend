@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { Alert } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button, Typography } from '@material-ui/core';
-import { createVendor } from '../../api/vendor';
-import FormFields, { vendorFieldKeys } from './FormFields';
+import { createCustomer } from '../../api/customer';
+import FormFields, { customerFieldKeys } from './FormFields';
 import { Link } from 'react-router-dom';
-import { vendorPath } from '../../utils/routepath';
+import { customerPath } from '../../utils/routepath';
 import { validateEmail } from '../../utils/utils';
-const successMsg = 'Vendor Details Added Successfully';
-const errorMsg = 'Problem in adding vendor. Check the values';
+const successMsg = 'Customer Details Added Successfully';  
+const errorMsg = 'Problem in adding customer. Check the values';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,8 +29,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CreateVendor() {
-  const [vendorData, updateVendorData] = useState({});
+export default function CreateCustomer() {
+  const [customerData, updateCustomerData] = useState({});
   const [isFormValid, updateIsFormValid] = useState(false);
   const [formFieldErrors, updateFormFieldErrors] = useState({});
   const [errorStatus, updateErrorStatus] = useState({
@@ -40,13 +40,13 @@ export default function CreateVendor() {
   const onInputChange = (newData ) => {
     const isFormValid = isFormValidFun(newData)
     updateIsFormValid(isFormValid);
-    updateVendorData(newData);
+    updateCustomerData(newData);
   };
-  const isFormValidFun = (updatedVendorData)=>{
+  const isFormValidFun = (updatedCustomerData)=>{
     let isFormValid = false
-    for (let index = 0; index < vendorFieldKeys.length; index++) {
-      const { id, type: inputType } = vendorFieldKeys[index];
-      const value = updatedVendorData[id];
+    for (let index = 0; index < customerFieldKeys.length; index++) {
+      const { id, type: inputType } = customerFieldKeys[index];
+      const value = updatedCustomerData[id];
       if (!value) {
         isFormValid = false;
         break;
@@ -63,10 +63,10 @@ export default function CreateVendor() {
     }
     
   }
-  const submitVendorData = async (e) => {
+  const submitCustomerData = async (e) => {
     e.preventDefault();
     updateErrorStatus({ status: 'inprogress' });
-      const createStatus = await createVendor(vendorData);
+      const createStatus = await createCustomer(customerData);
       if (createStatus.success) {
         updateErrorStatus({ status: 'success', message: successMsg });
         setTimeout(() => {
@@ -88,10 +88,10 @@ export default function CreateVendor() {
         className={classes.root}
         noValidate
         autoComplete="off"
-        onSubmit={submitVendorData}
+        onSubmit={submitCustomerData}
       >
         <header className={classes.header}>
-          <Typography variant="h5">Create Vendor</Typography>
+          <Typography variant="h5">Create Customer</Typography>
         </header>
         <div>
           <FormFields onValueChange={onInputChange} errors={formFieldErrors} />
@@ -111,7 +111,7 @@ export default function CreateVendor() {
           className={classes.backButton}
         >
           <Link
-            to={vendorPath}
+            to={customerPath}
             className={classes.backLink}
           >{String.raw`Cancel`}</Link>
         </Button>

@@ -3,41 +3,13 @@ import { InventoryTextField } from '../common-components/textField';
 import { makeStyles } from '@material-ui/core/styles';
 import { validateEmail } from '../../utils/utils';
 
-export const vendorFieldKeys = [
+export const itemsFieldKeys = [
   {
-    id: 'address_2',
+    id: 'code',
     type: 'text',
   },
   {
-    id: 'vendor',
-    type: 'text',
-  },
-  {
-    id: 'account_name',
-    type: 'text',
-  },
-  {
-    id: 'gst_number',
-    type: 'number',
-  },
-  {
-    id: 'city',
-    type: 'text',
-  },
-  {
-    id: 'pin_code',
-    type: 'number',
-  },
-  {
-    id: 'fax_no',
-    type: 'number',
-  },
-  {
-    id: 'account_no',
-    type: 'number',
-  },
-  {
-    id: 'branch',
+    id: 'name',
     type: 'text',
   },
   {
@@ -45,64 +17,44 @@ export const vendorFieldKeys = [
     type: 'text',
   },
   {
-    id: 'contact_person',
+    id: 'image_url',
+    type: 'text',
+  },
+  {
+    id: 'unit_size',
     type: 'number',
   },
   {
-    id: 'timezone',
-    type: 'text',
-  },
-  {
-    id: 'phone_no_2',
+    id: 'unit',
     type: 'number',
   },
   {
-    id: 'bank_name',
-    type: 'text',
-  },
-  {
-    id: 'country',
-    type: 'text',
-  },
-  {
-    id: 'code',
-    type: 'text',
-  },
-  {
-    id: 'IFSC_code',
-    type: 'text',
-  },
-  {
-    id: 'pan_number',
+    id: 'min_order_qty',
     type: 'number',
   },
   {
-    id: 'phone_no_1',
+    id: 'max_order_qty',
     type: 'number',
   },
   {
-    id: 'email_id',
-    type: 'email',
+    id: 'min_purchase_price',
+    type: 'number',
   },
   {
-    id: 'name',
+    id: 'max_purchase_price',
+    type: 'number',
+  },
+  {
+    id: 'default_currency',
     type: 'text',
   },
   {
-    id: 'ts',
-    type: 'text',
+    id: 'preferred_vendor',
+    type: 'number',
   },
   {
-    id: 'state',
+    id: 'timestamp',
     type: 'text',
-  },
-  {
-    id: 'address_1',
-    type: 'text',
-  },
-  {
-    id: 'alternate_email_id',
-    type: 'email',
   },
 ];
 
@@ -114,37 +66,37 @@ const useStyles = makeStyles({
 export default function FormFields(props) {
   const classes = useStyles();
   const { onValueChange, data: defaultData = {}, errors = {} } = props;
-  const [vendorError, updateErrorData] = useState({});
-  const [vendorData, updateVendorData] = useState(defaultData);
+  const [itemsError, updateErrorData] = useState({});
+  const [itemsData, updateItemsData] = useState(defaultData);
   
   const onInputChange = (e, inputType) => {
     const { name, value } = e.target;
     let isFormValid = false;
     if (!value) {
-      updateErrorData({ ...vendorError, [name]: `${name} is required` });
+      updateErrorData({ ...itemsError, [name]: `${name} is required` });
     } else if (inputType === 'number' && isNaN(value)) {
       updateErrorData({
-        ...vendorError,
+        ...itemsError,
         [name]: `${name} needs to be a number`,
       });
     } else if (inputType === 'email' && !validateEmail(value)) {
       updateErrorData({
-        ...vendorError,
+        ...itemsError,
         [name]: `Enter a valid email`,
       });
     } else {
-      const newVendorError = { ...vendorError };
-      delete newVendorError[name];
-      isFormValid = Object.keys(newVendorError).length === 0;
-      updateErrorData({ ...newVendorError });
+      const newItemsError = { ...itemsError };
+      delete newItemsError[name];
+      isFormValid = Object.keys(newItemsError).length === 0;
+      updateErrorData({ ...newItemsError });
     }
-    const newVendorData = { ...vendorData, [name]: value };
-    onValueChange(newVendorData);
-    updateVendorData(newVendorData);
+    const newItemsData = { ...itemsData, [name]: value };
+    onValueChange(newItemsData);
+    updateItemsData(newItemsData);
   };
   return (
     <>
-      {vendorFieldKeys.map(({ id, type }) => {
+      {itemsFieldKeys.map(({ id, type }) => {
         return (
           <div className={classes.fieldContainer} key={'view' + id}>
             <InventoryTextField
@@ -155,9 +107,9 @@ export default function FormFields(props) {
               onChange={(e) => onInputChange(e, type)}
               name={id}
               label={id.replaceAll('_', ' ').toUpperCase()}
-              value={vendorData[id] || ''}
-              error={Boolean(vendorError[id])}
-              helperText={vendorError[id] || ''}
+              value={itemsData[id] || ''}
+              error={Boolean(itemsError[id])}
+              helperText={itemsError[id] || ''}
             />
           </div>
         );
